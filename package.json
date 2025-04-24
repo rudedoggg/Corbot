@@ -1,0 +1,23 @@
+{
+  "name": "ai-agent-framework",
+  "version": "0.1.0",
+  "description": "A framework to launch and manage AI Agents",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jest"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "framework"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+} 
