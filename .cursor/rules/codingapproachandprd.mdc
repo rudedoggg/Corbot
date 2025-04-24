@@ -1,0 +1,241 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Coding Pattern Preferences
+
+- After making changes, ALWAYS make sure to start up a new server so I can test it.
+- Always look for existing code to iterate on instead of creating new code.
+- Do not drastically change the patterns before trying to iterate on existing patterns.
+- Always kill all existing related servers that may have been created in previous testing before trying to start a new server.
+- Always prefer simple solutions
+- Avoid duplication of code whenever possible, which means checking for other areas of the codebase that might already have similar code and functionality
+- Write code that takes into account the different environments: dev, test, and prod
+- You are careful to only make changes that are requested or you are confident are well understood and related to the change being requested
+- When fixing an issue or bug, do not introduce a new pattern or technology without first exhausting all options for the existing implementation. And if you finally do this, make sure to remove the old implementation afterwards so we don't have duplicate logic.
+- Keep the codebase very clean and organized
+- Avoid writing scripts in files if possible, especially if the script is likely only to be run once
+- Avoid having files over 200-300 lines of code. Refactor at that point.
+- Mocking data is only needed for tests, never mock data for dev or prod
+- Never add stubbing or fake data patterns to code that affects the dev or prod environments
+- Never overwrite my .env file without first asking and confirming
+- Focus on the areas of code relevant to the task
+- Do not touch code that is unrelated to the task
+- Write thorough tests for all major functionality
+- Avoid making major changes to the patterns and architecture of how a feature works, after it has shown to work well, unless explicitly instructed
+- Always think about what other methods and areas of code might be affected by code changes
+
+# Coding workflow preferences
+
+- Focus on the areea of code relevant to the task
+- Do not touch code that is unrelated to the task
+- Write thorough tests for all major functionality
+- Leverage best practices for unit tests, integreation tests and end-to-end tests. Leverage a framework if that is the most efficient
+- Avoid making major change to the patterns and architecture of how a feature works, after it has shown to work well, unless expelicitly strucutre
+- Always thinkg about what other methods and area of code might be affected by code changes
+
+#Coding Preferences: Framework Selection & Architecture
+
+Fundamental Principles
+- Design for appropriate flexibility, not infinite flexibility
+- Abstract third-party dependencies just enough to enable future swapping without over-engineering
+- Recognize that some integrations should be lightweight while others warrant deeper abstraction layers
+- When evaluating technologies, prioritize those with standard interfaces and data formats
+
+Library vs Custom Code Strategy
+- Use established libraries for commoditized functionality (auth, databases, vector storage)
+- Write custom code only for unique value proposition and domain-specific logic
+- Create clean interfaces between core business logic and external dependencies
+- Avoid deep coupling with vendor-specific features unless they provide substantial value
+- Framework Interchangeability
+- Design integration points that allow replacement without massive refactoring
+- Use the adapter pattern for high-risk or frequently changing dependencies
+- Don't over-abstract stable, standard interfaces (like SQL databases) with excessive layers
+- Test the "swappability" of key components during initial implementation
+- Accept reasonable vendor lock-in for non-critical features when it simplifies implementation
+
+Selection Criteria for Replaceable Components
+- Prioritize solutions using standard protocols and data formats
+- Prioritize solutoions and protocols that have a large community of developers and lots of documentation- do not choose obscure frameworks, unless explicitly instructed to
+- Choose libraries with clear export/import capabilities
+- Verify documentation for migration paths to alternatives
+- Evaluate API similarity between competing solutions in the same category
+- Consider community-built adapters between similar services as migration insurance
+
+Implementation Practices
+- Centralize configuration and dependency instantiation
+- Use dependency injection to isolate external services
+- Implement feature flags for controlling functionality
+- Create clear data transformation layers at system boundaries
+- Write integration tests that could support multiple implementations
+- Document assumptions about third-party behavior and contracts
+
+Technical Debt Awareness
+- Document known techncial debt or risk
+- Acknowledge that some dependence is inevitable and appropriate
+- Balance future flexibility against current development velocity
+- Periodically reassess integration points for brittleness
+- Plan for eventual replacement of critical components
+- Focus abstraction efforts on business-critical or rapidly evolving services
+
+TESTING_RULE: All changes must include appropriate tests and pass the full test suite before merging.
+
+1. AUTHENTICATION:
+   - Test both with and without authentication where relevant
+   - Mock authentication for unit tests, use real auth for E2E tests
+
+2. LAYERS:
+   - UNIT: Test individual functions/components in isolation
+   - INTEGRATION: Test interactions between components (API+DB, Frontend+API)
+   - E2E: Test complete user flows (login→action→logout)
+
+
+3. DOCUMENTATION:
+   - Document test setup requirements in test files
+   - Add test cases to TESTING_CHECKLIST.md for feature coverage
+   - With each new feature introduction, regression test past features to ensure nothing was broken before moving onto the next feature
+
+
+   The PRD:
+
+   # Product Requirements Document (PRD): Corbot Framework
+
+## 1. Purpose  
+Define and build **Corbot**, a personal AI agent framework (and eventual swarm) that can replicate itself with configurable specialities, act autonomously to pursue goals, manage crypto/fiat payments, and maintain secure, encrypted memory—free from uncontrolled third-party data exposure.
+
+## 2. Scope  
+- **MVP**: Single agent (“Corbot”) with chat interface, persistent memory, multi-method authentication, voice I/O, front-end UI, LLM-switching capability.  
+- **Post-MVP**: Replication/rename of Corbot; swarm governance and analytics; inter-agent communication; kill-switch control; dynamic integration plug-ins; vector DB storage; identity wallet for structured data.
+
+## 3. User Stories  
+1. **Chat & Memory**  
+   - As John, I want to chat with Corbot and have it remember past conversations and data so it can personalize responses.  
+2. **Authentication**  
+   - As John, I want to log in via username/password, zero-knowledge passkey, or Web3 wallet so I control access.  
+3. **Voice Interface**  
+   - As John, I want to speak and listen to Corbot using STT and TTS so I can interact hands-free.  
+4. **LLM Management**  
+   - As John, I want Corbot to report its current AI model and let me switch models dynamically.  
+5. **Replication & Specialities**  
+   - As John, I want Corbot to clone itself with specialized skills (e.g., finance agent, research agent).  
+6. **Swarm Governance**  
+   - As John, I want a governing agent to track analytics and communications across the swarm.  
+7. **Crypto Wallet**  
+   - As John, I want Corbot to hold/manage crypto wallets to send/receive payments.  
+8. **Control & Safety**  
+   - As John, I want Corbot to be able to remotely disable rogue agents via a configurable kill-switch.
+
+## 4. Functional Requirements  
+
+### 4.1 Agent Core & Replication  
+- Instantiate “Corbot” with identity, memory store, integration registry.  
+- On-demand replication: fork Corbot state, assign new name, apply specialized skill-set modules.
+
+### 4.2 Specialities & Skill Modules  
+- Plugin architecture: attach/remove skill modules (e.g., “LegalResearch”, “MarketAnalysis”).  
+- Configurable per agent instance.  
+
+### 4.3 Autonomous Goal Management  
+- Define:  
+  - **Long-Term Purpose** (e.g., “Manage household finances”).  
+  - **Short-Term Goals** (e.g., “Pay utility bill by May 1, 2025”).  
+  - **Tactics** (e.g., “Fetch current balance, initiate transaction”).  
+- Scheduler & planner to decompose goals into tasks.
+
+### 4.4 Crypto & Fiat Payments  
+- Integrate multi-chain wallet SDK.  
+- Send/receive crypto; interface with fiat rails via service providers.  
+- Transaction tracking & reporting.
+
+### 4.5 ElizaOS Framework Integration  
+- Leverage existing ElizaOS modules & community integrations :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1}.  
+- Evaluate and wrap all ElizaOS-enabled integrations for Corbot Framework.
+
+### 4.6 Authentication & Identity  
+- **Username & Password** flow.  
+- **Zero-Knowledge Passkey** (WebAuthn + ZKP).  
+- **Web3 Wallet** (e.g., MetaMask) connection.
+
+### 4.7 Memory & Data Persistence  
+- Encrypted vector DB for conversation embedding.  
+- Identity wallet plug-in for structured PII.  
+- Permission-based access controls for sensitive data.
+
+### 4.8 Voice I/O  
+- STT engine (e.g., Whisper).  
+- TTS engine (e.g., Piper).  
+- Fallback to text chat.
+
+### 4.9 Front-End Interface  
+- Web application: chat window, voice controls, agent dashboard.  
+- Display current LLM/model, agent specialities, governance logs.
+
+### 4.10 LLM & Model Switching  
+- API layer abstracts multiple LLM providers.  
+- “What model are you using?” → agent responds.  
+- “Switch to GPT-4o” → agent reloads model binding.
+
+### 4.11 Swarm Governance & Analytics  
+- Governing agent dashboard: health metrics, task queues, inter-agent messages.  
+- Configurable rules for agent behavior.
+
+### 4.12 Inter-Agent Communication & Logging  
+- Peer-to-peer or brokered messaging (Matrix/libp2p).  
+- All messages/events logged in Corbot Framework.
+
+### 4.13 Kill-Switch Control  
+- Corbot owner (John Ruder) can disable all derived agents.  
+- Control flags live in central registry; inherited only when explicitly permitted.
+
+### 4.14 Data Privacy & Security  
+- End-to-end encryption for all data at rest/in transit.  
+- Mask/redact/fake PII before sending to third-party LLMs unless explicit consent.  
+- Compliance with personal data best practices (GDPR-style principles).
+
+## 5. Non-Functional Requirements  
+- **Scalability**: support hundreds of agents.  
+- **Extensibility**: modular plug-in system for future features.  
+- **Performance**: sub-second chat response times (excluding LLM latency).  
+- **Reliability**: 99.9% uptime for core services.  
+- **Security**: AES-256 data encryption; role-based access control.  
+
+## 6. Architecture Overview  
+[User] ↔ [Front-End UI] ↔ [API Gateway] ↔ {
+[Agent Core Services]
+[Memory Store (Vector DB)]
+[Identity Wallet Service]
+[LLM Provider Adapters]
+[Crypto Wallet Module]
+[Governance & Analytics]
+}
+
+
+## 7. MVP Milestones  
+1. **Setup ElizaOS base** and wrap core modules.  
+2. **Chat UI** + **persistent memory** integration.  
+3. **Authentication** (username/password, ZKP passkey, Web3 wallet).  
+4. **Voice I/O** (STT/TTS integration).  
+5. **Model-switching** via UI commands.  
+6. **Initial Corbot replication** proof-of-concept.  
+
+## 8. Future Enhancements  
+- Mobile client.  
+- Multi-agent cooperative task execution.  
+- Marketplace for third-party skill modules.  
+- AI-driven security monitoring of swarm behavior.
+
+## 9. Acceptance Criteria  
+- Users can chat with Corbot; all messages persist across sessions.  
+- Users authenticate via ≥1 method.  
+- Corbot speaks/understands voice input.  
+- Corbot reports and switches LLM providers on request.  
+- Corbot clones itself with a new name and skill module.  
+- Governing dashboard displays agent metrics.  
+- Kill-switch disables cloned agent instance.
+
+---
+
+## Bibliography  
+1. ElizaOS Official Website: [https://www.elizaos.ai/](https://www.elizaos.ai/)  
+2. ElizaOS GitHub Repository: [https://github.com/elizaOS/eliza](https://github.com/elizaOS/eliza) 
