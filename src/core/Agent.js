@@ -18,6 +18,7 @@ class Agent {
     // Features
     this.memory = config.memory || null;
     this.skills = config.skills || [];
+    this.llm = config.llm || null;
     this.currentLLM = config.defaultLLM || 'gpt-3.5-turbo';
     
     // Goals and purpose
@@ -80,6 +81,7 @@ class Agent {
       await this.memory.storeMessage({
         role: 'assistant',
         content: response,
+        userId: userId || 'unknown',
         timestamp: new Date()
       });
     }
@@ -92,8 +94,31 @@ class Agent {
    * Generate a response using the current LLM
    */
   async generateResponse(message, userId) {
-    // This would be implemented by a specific LLM service
-    return `[Response using ${this.currentLLM}]: This is a placeholder. Implement with real LLM integration.`;
+    // If we have an LLM service, use it
+    if (this.llm) {
+      try {
+        // Get conversation history for context if memory is available
+        let history = [];
+        if (this.memory) {
+          history = await this.memory.getConversationHistory(userId, 10);
+        }
+        
+        // Create system message with agent info
+        const systemMessage = `You are ${this.name}, ${this.description}. Your purpose is: ${this.longTermPurpose}`;
+        
+        // Process with LLM
+        return await this.llm.processMessage(message, history, {
+          systemMessage,
+          model: this.currentLLM
+        });
+      } catch (error) {
+        console.error('Error generating response with LLM:', error);
+        return `I'm having trouble connecting to my language model right now. Please try again later.`;
+      }
+    }
+    
+    // Fallback to placeholder response
+    return `[Response using ${this.currentLLM}]: This is a placeholder. Real LLM responses will be enabled when an OpenAI API key is provided.`;
   }
 
   /**
@@ -101,6 +126,12 @@ class Agent {
    */
   async switchLLM(model) {
     this.currentLLM = model;
+    
+    // Update the LLM service if available
+    if (this.llm) {
+      this.llm.switchModel(model);
+    }
+    
     return `Switched to model: ${model}`;
   }
   
@@ -122,6 +153,7 @@ class Agent {
       name: config.name || `${this.name}-Clone`,
       description: config.description || this.description,
       owner: this.owner,
+      llm: this.llm,
       defaultLLM: this.currentLLM,
       memory: config.shareMemory ? this.memory : null,
       isKillSwitchEnabled: this.isKillSwitchEnabled,
@@ -163,4 +195,4 @@ class Agent {
   }
 }
 
-module.exports = Agent; 
+export default Agent; 

@@ -1,6 +1,6 @@
-# Corbot Framework
+# Corbot
 
-A personal AI agent framework that can replicate itself with configurable specialities, act autonomously to pursue goals, and maintain secure, encrypted memory.
+A personal AI agent that can replicate itself with configurable specialities, act autonomously to pursue goals, and maintain secure, encrypted memory.
 
 ## Features (MVP)
 
@@ -16,14 +16,13 @@ A personal AI agent framework that can replicate itself with configurable specia
 ### Prerequisites
 
 - Node.js 14+
-- MongoDB (for memory persistence)
 - npm or yarn
 
 ### Installation
 
 ```bash
 git clone <your-repository-url>
-cd corbot-framework
+cd corbot
 npm install
 ```
 
@@ -31,10 +30,10 @@ npm install
 
 Create a `.env` file in the root directory with the following variables:
 
-```
+```properties
 PORT=3000
-MONGODB_URI=mongodb://localhost:27017/corbot
-JWT_SECRET=your-secret-key
+SUPABASE_URL=your-supabase-url
+SUPABASE_ANON_KEY=your-supabase-anon-key
 OPENAI_API_KEY=your-openai-api-key
 ```
 
@@ -46,7 +45,7 @@ npm run dev
 
 ## Project Structure
 
-```
+```text
 ├── src/
 │   ├── agents/       # Agent implementations and specialties
 │   ├── core/         # Core framework classes

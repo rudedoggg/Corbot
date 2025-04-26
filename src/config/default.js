@@ -14,6 +14,6 @@ module.exports = {
   
   logging: {
     level: process.env.LOG_LEVEL || 'info',
-    file: process.env.LOG_FILE || 'logs/agent-framework.log'
+    file: process.env.LOG_FILE || 'logs/corbot.log'
   }
 }; 
